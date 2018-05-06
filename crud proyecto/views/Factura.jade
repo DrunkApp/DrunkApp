@@ -1,0 +1,44 @@
+html
+	head
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		title CRUD
+		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+	body
+		block content
+			.main.container
+				.row
+					.col-md-6.col-md-offset-3
+						table.table.table-dark
+							thead.thead-dark
+								tr
+									th
+										h1.display-4.m-b-2 Facturas
+										a(href="/crearFactura") Nueva Factura
+								tr
+									th ID
+									th Id Usuario
+									th Id Producto
+									th Numero de Comprobante
+									th Fecha
+									th Detalles
+									th Total
+									th EDITAR
+									th ELIMINAR
+							tbody
+								for item in data
+									tr
+										td= item._id
+										td= item.usuario_id
+										td= item.producto_id
+										td= item.nro_comprobante
+										td= item.fecha
+										td= item.detalles
+										td= item.total
+										td
+											form(method='POST' action='/editarViewFactura' )
+												input(type='hidden'  name='_id' value=item._id)
+												input(type='submit'  value='Editar') 
+										td
+											form(method='POST' action='/eliminarFactura')
+												input(type='hidden' name='_id' value=item._id)
+												input(type='submit' value='Eliminar')

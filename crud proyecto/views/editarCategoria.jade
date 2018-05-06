@@ -1,0 +1,25 @@
+html
+	head
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		title CRUD
+		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+		
+	body
+		block content
+			.main.container
+				.row
+					.col-md-6.col-md-offset-3
+						h1.display-4.m-b-2 Editar Categoria
+						form(method='POST' action='/editarCategoria')
+							div.form-group
+								label(for='id') Id:
+								input.form-control(type='text' name='_id' value=data._id)
+							div.form-group
+								label(for='producto_id') Id de Producto:
+								input.form-control(type='text' name='producto_id' value=data.producto_id)
+							div.form-group
+								label(for='nombre_categoria') Nombre de Categoria:
+								input.form-control(type='text' name='nombre_categoria' value=data.nombre_categoria)
+							
+							button.btn.btn-success(type='submit') Guardar cambios
+							

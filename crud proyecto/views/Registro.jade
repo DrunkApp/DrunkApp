@@ -1,0 +1,37 @@
+html
+	head
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		title CRUD
+		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+	body
+		block content
+			.main.container
+				.row
+					.col-md-6.col-md-offset-3
+						table.table.table-dark
+							thead.thead-dark
+								tr
+									th
+										h1.display-4.m-b-2 Registros
+										a(href="/crearRegistro") Nuevo Registro
+								tr
+									th ID
+									th Id de Pedido
+									th Id de Producto
+									th EDITAR
+									th ELIMINAR
+							tbody
+								for item in data
+									tr
+										td= item._id
+										td= item.pedido_id
+										td= item.producto_id
+										
+										td
+											form(method='POST' action='/editarViewRegistro' )
+												input(type='hidden'  name='_id' value=item._id)
+												input(type='submit'  value='Editar') 
+										td
+											form(method='POST' action='/eliminarRegistro')
+												input(type='hidden' name='_id' value=item._id)
+												input(type='submit' value='Eliminar')

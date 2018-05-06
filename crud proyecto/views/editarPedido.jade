@@ -1,0 +1,30 @@
+html
+	head
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		title CRUD
+		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+		
+	body
+		block content
+			.main.container
+				.row
+					.col-md-6.col-md-offset-3
+						h1.display-4.m-b-2 Editar Pedido
+						form(method='POST' action='/editarPedido')
+							div.form-group
+								label(for='id') Id:
+								input.form-control(type='text' name='_id' value=data._id)
+							div.form-group
+								label(for='usuario_id') Id Usuario:
+								input.form-control(type='text' name='usuario_id' value=data.usuario_id)
+							div.form-group
+								label(for='estado') Estado:
+								input.form-control(type='text' name='estado' value=data.estado)
+							div.form-group
+								label(for='fecha_pedido') Fecha de pedido:
+								input.form-control(type='text' name='fecha_pedido' value=data.fecha_pedido)
+							div.form-group
+								label(for='precio') Precio:
+								input.form-control(type='text' name='precio' value=data.precio)									
+							
+							button.btn.btn-success(type='submit') Guardar cambios

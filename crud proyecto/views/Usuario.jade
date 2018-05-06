@@ -1,0 +1,44 @@
+html
+	head
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		title CRUD
+		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+	body
+		block content
+			.main.container
+				.row
+					.col-md-6.col-md-offset-3
+						table.table.table-dark
+							thead.thead-dark
+								tr
+									th
+										h1.display-4.m-b-2 Usuarios
+										a(href="/crearUsuario") Nuevo Usuario
+								tr
+									th ID
+									th Celular
+									th DNI
+									th Nick
+									th Contraseña
+									th Correo
+									th Direccion
+									th EDITAR
+									th ELIMINAR
+							tbody
+								for item in data
+									tr
+										td= item._id
+										td= item.celular
+										td= item.dni
+										td= item.nick
+										td= item.password
+										td= item.correo
+										td= item.direccion
+										td
+											form(method='POST' action='/editarViewUsuario' )
+												input(type='hidden'  name='_id' value=item._id)
+												input(type='submit'  value='Editar') 
+										td
+											form(method='POST' action='/eliminarUsuario')
+												input(type='hidden' name='_id' value=item._id)
+												input(type='submit' value='Eliminar')

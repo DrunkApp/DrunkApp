@@ -1,0 +1,22 @@
+html
+	head
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		title CRUD
+		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+		
+	body
+		block content
+			.main.container
+				.row
+					.col-md-6.col-md-offset-3
+						h1.display-4.m-b-2 Crear Registro
+						form(method='POST' action='/crearRegistro')
+							
+							div.form-group
+								label(for='pedido_id') Id Pedido:
+								input.form-control(type='text' name='pedido_id')
+							div.form-group
+								label(for='producto_id') Id Producto:
+								input.form-control(type='text' name='producto_id')
+							
+							button.btn.btn-success(type='submit') Guardar Registro

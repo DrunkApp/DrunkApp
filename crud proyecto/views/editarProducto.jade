@@ -1,0 +1,25 @@
+html
+	head
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		title CRUD
+		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+		
+	body
+		block content
+			.main.container
+				.row
+					.col-md-6.col-md-offset-3
+						h1.display-4.m-b-2 Editar Producto
+						form(method='POST' action='/editarProducto')
+							div.form-group
+								label(for='id') Id:
+								input.form-control(type='text' name='_id' value=data._id)
+							div.form-group
+								label(for='numero_producto') Numero de Producto:
+								input.form-control(type='text' name='numero_producto' value=data.numero_producto)
+							div.form-group
+								label(for='descripcion_producto') Descripcion del Producto:
+								input.form-control(type='text' name='descripcion_producto' value=data.descripcion_producto)
+							
+							button.btn.btn-success(type='submit') Guardar cambios
+							

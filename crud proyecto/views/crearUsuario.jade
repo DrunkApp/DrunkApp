@@ -1,0 +1,34 @@
+html
+	head
+		meta(name='viewport', content='width=device-width, initial-scale=1')
+		title CRUD
+		link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+		
+	body
+		block content
+			.main.container
+				.row
+					.col-md-6.col-md-offset-3
+						h1.display-4.m-b-2 Crear Usuario
+						form(method='POST' action='/crearUsuario')
+							
+							div.form-group
+								label(for='celular') Celular:
+								input.form-control(type='text' name='celular')
+							div.form-group
+								label(for='dni') DNI:
+								input.form-control(type='text' name='dni')
+							div.form-group
+								label(for='nick') Nick:
+								input.form-control(type='text' name='nick')
+							div.form-group
+								label(for='password') Contraseña:
+								input.form-control(type='text' name='password')
+							div.form-group
+								label(for='correo') Correo Electronico:
+								input.form-control(type='text' name='correo')
+							div.form-group
+								label(for='direccion') Direccion:
+								input.form-control(type='text' name='direccion')
+								div#labelSub
+							button.btn.btn-success(type='submit') Guardar Usuario
