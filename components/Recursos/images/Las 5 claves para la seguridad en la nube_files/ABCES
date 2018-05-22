@@ -1,0 +1,289 @@
+(function () {
+
+    var Pixel=function (host,token) {
+
+        function getScreenDimensions() {
+            var width = 0;
+            var height = 0;
+
+            if(window.screen.availWidth && window.screen.width) {
+                width = window.screen.availWidth > window.screen.width ? window.screen.width : window.screen.availWidth;
+            } else {
+                width = window.screen.availWidth || window.screen.width;
+            }
+
+            if(window.innerWidth && window.innerWidth < width) {
+                width = window.innerWidth;
+            }
+
+            if(window.screen.availHeight && window.screen.height) {
+                height = window.screen.availHeight > window.screen.height ? window.screen.height : window.screen.availHeight;
+            } else {
+                height = window.screen.availHeight || window.screen.height;
+            }
+
+            if(window.innerHeight && window.innerHeight < height) {
+                height = window.innerHeight;
+            }
+
+            // Check orientation
+            if(window.innerWidth / window.innerHeight > 1) {
+                return {
+                    width: width > height ? width : height,
+                    height: height < width ? height : width
+                };
+            } else {
+                return {
+                    width: width < height ? width : height,
+                    height: height > width ? height : width
+                };
+            }
+        }
+
+        function getPageHeight() {
+            var body = document.body;
+            var html = document.documentElement;
+
+            return Math.max(
+                body.scrollHeight || 0,
+                body.offsetHeight || 0,
+                html.clientHeight || 0,
+                html.scrollHeight || 0,
+                html.offsetHeight || 0
+            );
+        }
+
+        function calculateScrollPercent() {
+            var screenDimensions = getScreenDimensions();
+            var pageHeight = getPageHeight();
+
+            var scrollTop = document.documentElement.scrollTop || document.body.scrollTop || window.pageYOffset || 0;
+            var scrollDown = Math.min(scrollTop + screenDimensions.height, pageHeight);
+
+            var scrollPercent = 0;
+            if(pageHeight > 0) {
+                scrollPercent = (scrollDown / pageHeight) * 100;
+            }
+
+            // scrollPercent: 0 <= x <= 100
+            return scrollPercent;
+        }
+
+        if(!host||!token) return;
+
+        this.token      = token;
+        this.host       = host;
+        this.referrer   = document.referrer;
+
+        this.time_init=Date.now()/1000;
+
+        var $pixel=this;
+        var $mat=$pixel.mat=null;
+
+        this.getCookie=function (cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for(var i = 0; i <ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') c = c.substring(1);
+                if    (c.indexOf(name) == 0) return c.substring(name.length, c.length);
+            }
+            return "";
+        };
+        this.setCookie=function (cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays*24*60*60*1000));
+            var expires = "expires="+ d.toUTCString();
+            document.cookie = cname + "=";
+            document.cookie = cname + "=;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/";
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+            document.cookie = cname + "=" + cvalue + ";" + expires;
+        };
+        this.serialize=function (obj) {
+            var str = "";
+            for (var key in obj) {
+                if (str != "") str += "&";
+                str += key + "=" + encodeURIComponent(obj[key]);
+            }
+            return str;
+        };
+        this.get=function (url,dataObject,callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    if(typeof callback==="function") callback(xhr.responseText);
+                }
+            };
+            xhr.open("GET", url+"?"+this.serialize(dataObject), true);
+            xhr.send();
+        };
+        this.getWithCredentials=function (url,dataObject,callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                    if(typeof callback==="function") callback(xhr.responseText);
+                }
+            };
+            xhr.withCredentials = true;
+            xhr.open("GET", url+"?"+this.serialize(dataObject), true);
+            xhr.send();
+        };
+        this.getJSON=function (url,dataObject,callback) {
+            this.get(url,dataObject,function (data) {
+                callback(JSON.parse(data));
+            });
+        };
+        this.getJSONWithCredentials=function (url,dataObject,callback) {
+            this.getWithCredentials(url,dataObject,function (data) {
+                callback(JSON.parse(data));
+            });
+        };
+        this.ping=function () {
+            if(!this.idv) return;
+
+            var $this=this;
+
+            window.setTimeout(function () {
+                $pixel.get("https://ping1.socy.es/ping.json",{
+                    idv:$pixel.idv,
+                    t  :$pixel.token,
+                    time:Math.floor(Date.now()/1000-$this.time_init), // en segundos unix
+                    prof:Math.floor($pixel.maxScroll)
+                },function (pingObject) {
+                    $pixel.ping();
+                });
+            },10000);
+        };
+
+        this._ga  = this.getCookie("_ga");
+        this._gid = this.getCookie("_gid");
+        this.maxScroll=calculateScrollPercent();
+
+        /// Function before pixel call
+        if(typeof by2CustomObject!=="undefined" && typeof by2CustomObject.beforeStart==="function") {
+            by2CustomObject.beforeStart.call($pixel);
+        }
+
+        // init
+        var data= {
+            t:$pixel.token,
+            r: $pixel.referrer,
+            _ga:$pixel._ga,
+            _gid:$pixel._gid,
+            "pathname":parser.pathname
+        };
+
+        /// TODO coger dominio solo (sin subdominios)
+        if(document.referrer===""|| (document.referrer.indexOf(window.location.host)<0 && document.referrer.indexOf("traffic.besocy.com")<0)) {
+            sessionStorage.setItem("original_visit","");
+        }
+
+        /// Transmitirle los valores conseguidos en cookies
+        if(!!$pixel.getCookie("mat_n"))              data.n          = $pixel.getCookie("mat_n");
+        if(!!sessionStorage.getItem("matSessionID")) data.matSession = sessionStorage.getItem("matSessionID");
+        if(!!sessionStorage.getItem("original_visit"))  data.original_visit  = sessionStorage.getItem("original_visit");
+        if(!!$pixel.getCookie("matTesting"))         data.matTestingToken = $pixel.getCookie("matTesting");
+
+        var pixelHost=host;
+        if (pixelHost==="lee.eldia.es") pixelHost="m2.dozz.es";
+
+        $pixel.getJSON("https://"+pixelHost+"/pixel.json",data,function (responseData) {
+
+            var data=responseData;
+
+            $pixel.idv        = data.__IDV__;
+            $pixel.browserId  = data.__NAVEGADOR__;
+            $pixel.cookies    = data.__COOKIES__; /// Mientras sigamos en el paradigma de activacion por cookie
+
+            // Set cookies as local cookies
+            for (var cookie in $pixel.cookies) {
+                if(!$pixel.cookies[cookie] || $pixel.cookies[cookie]=="false") {
+                    $pixel.setCookie(cookie,$pixel.cookies[cookie],0);
+                } else $pixel.setCookie(cookie,$pixel.cookies[cookie],1);
+            }
+
+            if($pixel.idv ) {
+
+                // Excepciones
+                if(window.location.href.indexOf("ref=iframe")>-1||!!window.frameElement) return; // Si está en iframe
+                //if(typeof $ !== "function") return; // Si no hay jquery
+
+                /// Comienza trackeo de duración y profundidad
+                if(pixelHost==="m2.dozz.es") $pixel.ping();
+                if(pixelHost==="ver.20m.es") $pixel.ping();
+
+                //// Si es externo se graba en una variable el idv
+                if(document.referrer===""|| (document.referrer.indexOf(window.location.host)<0 && document.referrer.indexOf("traffic.besocy.com")<0)) {
+                    sessionStorage.setItem("original_visit",$pixel.idv);
+                }
+
+                // Calcular la profundidad
+                window.onscroll=function () {
+                    var actualScroll=calculateScrollPercent();
+                    if(actualScroll>$pixel.maxScroll) $pixel.maxScroll=actualScroll;
+                };
+
+                if (!!$pixel.getCookie("matTesting") && typeof $ === "function" && !window.frameElement&& /Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+                    /// Llamada para conseguir el json de mat
+                    var metaKeywords=document.querySelector("meta[name='keywords']");
+
+                    $pixel.getJSONWithCredentials("https://mat.socy.es/mat.json",{
+                        "mat"        : $pixel.getCookie("matTesting"), /// Mientras siga en modo beta todo
+                        "mst"        : $pixel.getCookie("mst"),
+                        "t"          : $pixel.token,
+                        "w"          : screen.width,
+                        "_ga"        : $pixel._ga,
+                        "_gid"       : $pixel._gid,
+                        "matSession"        : !!sessionStorage.getItem("matSessionID")?sessionStorage.getItem("matSessionID"):false,
+                        "matSessionCurrent" : !!sessionStorage.getItem("matSessionCurrent")?sessionStorage.getItem("matSessionCurrent"):false,
+                        "idv"        : $pixel.idv,
+                        "keywords"   : metaKeywords?metaKeywords.content:"",
+                        "cat"        : typeof dataLayer==="object" && dataLayer[0] && dataLayer[0].subcategoria? dataLayer[0].subcategoria:""
+                    },function (data) {
+                        if(data.mat) { // Si hay datos de mat carga js y css
+
+                            /// CSS
+                            var link, dlink= document.getElementsByTagName("link")[0];
+
+                            link = document.createElement("link");
+                            link.id = 'mat-styles';
+                            link.rel="stylesheet";
+                            link.href="https://mat.socy.es/mat/css/"+$pixel.token+"?mat_token="+$pixel.getCookie("matTesting")
+                                // TODO: para forzar el update sin cache
+                                +'&_='+(new Date().getTime());
+
+                            dlink.parentNode.insertBefore(link, dlink);
+
+                            /// MAT JS
+                            var matScript= document.createElement('script');
+                            matScript.async=1;
+                            matScript.onload=function () {
+                                /// En el callback de la carga del script carga mat
+                                $mat=$pixel.mat=new Mat($pixel,data);
+                            };
+                            pixelScript.parentNode.insertBefore(matScript, pixelScript);
+                            matScript.src="//mat.socy.es/mat/js/"+$pixel.token+"?mat_token="+$pixel.getCookie( "matTesting")
+                                // TODO: para forzar el update sin cache
+                                +'&_='+(new Date().getTime());
+                        }
+                    });
+                }
+
+            }
+        });
+    };
+
+    var pixelScript=document.currentScript || document.getElementById("dogtrack-pixel")|| document.getElementById("dogtrack-app") || document.getElementById("besocy_spixel");
+    var parser = document.createElement('a');
+
+    parser.href=pixelScript.src;
+    if(!pixelScript.dataset.h) pixelScript.dataset.h = pixelScript.h||parser.hostname;
+    if(!pixelScript.dataset.t) {
+        var t = pixelScript.t||parser.pathname.replace("/pixel/js/","").replace("pixel/js/","");
+        if(typeof t === 'string' && t.indexOf('/') > -1) t = t.substr(0, t.indexOf('/'));
+        pixelScript.dataset.t = t;
+    }
+    //// TODO sacar t sin referer
+    pixelScript.p=new Pixel(pixelScript.dataset.h,pixelScript.dataset.t);
+})();

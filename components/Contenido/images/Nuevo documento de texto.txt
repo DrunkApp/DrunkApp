@@ -1,0 +1,39 @@
+<div className="Productos">
+        
+        <br /><h2>NUESTROS PRODUCTOS</h2>
+        <h3>Ofrecemos una gama de productos</h3>
+
+<h4>Puede consultar nuestro catálogo de bebidas alcohólicas, estas son sólo una muestra de las principales marcas:</h4>
+
+
+<div class="responsive">
+  <div class="gallery">
+     <img src={tragos1} alt="tragos1" />
+    
+  
+    <img src={tragos1} alt="tragos1"  />
+    <h3>Nombre de la bebida</h3>
+  </div>
+</div>
+
+<div class="responsive">
+  <div class="gallery">
+     <img src={tragos1} alt="tragos1" />
+    
+  
+    <img src={tragos1} alt="tragos1"  />
+    <h3>Nombre de la bebida</h3>
+  </div>
+</div>
+
+<div class="responsive">
+  <div class="gallery">
+     <img src={tragos1} alt="tragos1" />
+    
+  
+    <img src={tragos1} alt="tragos1"  />
+    <h3>Nombre de la bebida</h3>
+  </div>
+</div>
+
+        </div>

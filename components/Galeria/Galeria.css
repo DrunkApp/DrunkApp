@@ -1,0 +1,28 @@
+  .Galeria {
+  
+  
+  width: 100%;
+  padding:0px;
+  
+  font-size: 18px;
+  font-family: cursive;
+
+}
+
+  .cajas{
+      width: 16%;
+      margin: 25px;
+      height: auto;
+      background: black;
+      padding:3%;
+      
+
+    
+  }
+
+  
+   .con-cajas{
+   display: flex;
+   align-items: center;
+   justify-content: center;
+ }
