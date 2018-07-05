@@ -43,7 +43,7 @@ module.exports = {
 			.save()
 			.then(result => {
 				res.status(200).json({
-					message: 'producto succesfully created!',
+					message: 'Producto creado exitosamente!',
 					data:{
 						...result['_doc']
 					}

@@ -121,7 +121,24 @@ module.exports = {
 			.exec()
 			.then(result => {
 				res.status(200).json({
-					message: 'Pedido deleted!'
+					message: 'Pedido eliminado!'
+				});
+			})
+			.catch(err =>{
+				console.log(err);
+				res.status(500).json({
+					error: err
+				});
+			});
+	},
+
+	delete_all: (req,res,next) => {
+		const id = req.params.id;
+		Pedido.remove({_id: id})
+			.exec()
+			.then(result => {
+				res.status(200).json({
+					message: 'Pedido eliminado!'
 				});
 			})
 			.catch(err =>{

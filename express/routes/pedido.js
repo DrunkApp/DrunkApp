@@ -11,6 +11,7 @@ router.get('/:id',pedidoController.findOne);
 router.post('/',pedidoController.create);
 router.put('/:id',pedidoController.update);
 router.delete('/:id',pedidoController.delete);
+router.post('/delete_all',pedidoController.delete_all);
 
 
 

@@ -25,7 +25,7 @@ module.exports = {
 				});
 				const exposedData = utils.getCleanUser(result['_doc']);
 				res.status(200).json({
-					message: 'User succesfully signup!',
+					message: 'Usuario creado exitosamente!',
 					data: exposedData,
 					token: token
 				});
@@ -47,7 +47,7 @@ module.exports = {
 				if(!user){
 					return res.status(401).json({
 						error: true,
-						message: 'Username or Password is wrong'
+						message: 'Username o contraseña incorrectos'
 					});
 				}
 				user.comparePassword(req.body.password)
@@ -55,11 +55,11 @@ module.exports = {
 						if (!valid) {
 							return res.status(401).json({
 								error:true,
-								message: 'Username or Password is wrong'
+								message: 'Username o contraseña incorrectos'
 							});
 						}
 						res.json({
-							message: 'User succesfully logged!',
+							message: 'Usuario logueado exitosamente!',
 							data: user,
 							token: utils.generateToken(user)
 						});
@@ -121,7 +121,7 @@ module.exports = {
 			.save()
 			.then(result => {
 				res.status(200).json({
-					message: 'User succesfully created!',
+					message: 'Usuario creado exitosamente!',
 					data:{
 						...result['doc']
 					}
