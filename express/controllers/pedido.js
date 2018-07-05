@@ -133,8 +133,10 @@ module.exports = {
 	},
 
 	delete_all: (req,res,next) => {
-		const id = req.params.id;
-		Pedido.remove({_id: id})
+		let query = {};
+		query.usuario_id = req.user._id;
+		Pedido.remove(query)
+		
 			.exec()
 			.then(result => {
 				res.status(200).json({
