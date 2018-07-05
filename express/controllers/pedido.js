@@ -30,10 +30,12 @@ module.exports = {
 			});
 	},
 	create: (req,res,next)=>{
-		var pedido = new Pedido({
+		const data = {
 			...req.body,
 			usuario_id: req.user._id
-		});
+		};
+		console.log(data);
+		var pedido = new Pedido(data);
 		pedido
 			.save()
 			.then(result => {
