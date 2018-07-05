@@ -27,6 +27,6 @@ const pedidoSchema = new Schema({
 });
 
 
-const pedidoModel = mongoose.model('pedidos', categoriaSchema);
+const pedidoModel = mongoose.model('pedidos', pedidoSchema);
 
 module.exports = pedidoModel;
