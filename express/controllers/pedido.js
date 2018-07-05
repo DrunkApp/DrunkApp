@@ -30,12 +30,10 @@ module.exports = {
 			});
 	},
 	create: (req,res,next)=>{
-		const data = {
+		var pedido = new Pedido({
 			...req.body,
 			usuario_id: req.user._id
-		};
-		console.log(data);
-		var pedido = new Pedido(data);
+		});
 		pedido
 			.save()
 			.then(result => {
@@ -54,7 +52,9 @@ module.exports = {
 			});
 	},
 	find: (req,res,next) => {
-		Pedido.find()
+		let query = {};
+		query.usuario_id = req.user._id;
+		Pedido.find(query)
 			.select(exposedFields.join(' '))
 			.exec()
 			.then(docs => {
