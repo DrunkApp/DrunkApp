@@ -6,7 +6,8 @@ const Schema = mongoose.Schema;
 const pedidoSchema = new Schema({
 	
 	usuario_id: {
-		type:  Number,
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'users',
 		required: true
 	},
 	nombre_producto: {
