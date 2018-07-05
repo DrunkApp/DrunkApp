@@ -35,6 +35,9 @@ router.use('/producto',productoRouter);
 const categoriaRouter = require('./routes/categoria');
 router.use('/categoria',categoriaRouter);
 
+const pedidoRouter = require('./routes/pedido');
+router.use('/pedido',pedidoRouter);
+
 app.use(multer({dest: './uploads/',
 	rename: function ( fieldname, filename) {
 		return filename;
