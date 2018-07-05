@@ -18,8 +18,8 @@ module.exports = {
 			message: 'Please register Log in using a valid email to submit posts'
 		});
 		utils.verifyToken(token)
-			.then(function(pedido){
-				req.pedido = pedido;
+			.then(function(user){
+				req.user = user;
 				next();
 			})
 			.catch(function(err){
@@ -31,7 +31,8 @@ module.exports = {
 	},
 	create: (req,res,next)=>{
 		var pedido = new Pedido({
-			...req.body
+			...req.body,
+			usuario_id: req.user._id
 		});
 		pedido
 			.save()
