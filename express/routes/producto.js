@@ -3,9 +3,11 @@ const router = express.Router();
 
 const productoController = require('../controllers/producto');
 
+router.get('/',productoController.find);
+
 router.use(productoController.verifyToken);
 
-router.get('/',productoController.find);
+
 router.get('/:id',productoController.findOne);
 router.post('/',productoController.create);
 router.put('/:id',productoController.update);
