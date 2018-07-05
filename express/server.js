@@ -7,6 +7,16 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
+
+
+
+
+app.set('view engine','jade');
+app.use(express.static('public'));
+
+
+
+
 const port = process.env.PORT || 5000;
 
 app.use("/", function(req,res,next){
@@ -49,6 +59,12 @@ app.use('/apidrunk', router);
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/drunkapp_blog');
 mongoose.Promise = global.Promise;
+
+
+app.use((req,res)=>{
+	res.render('main');
+});
+
 
 app.listen(port);
 console.log('La magia sucede en el puerto ' + port);
