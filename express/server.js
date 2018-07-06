@@ -61,9 +61,14 @@ mongoose.connect('mongodb://localhost:27017/drunkapp_blog');
 mongoose.Promise = global.Promise;
 
 
+
+
 app.use((req,res)=>{
 	res.render('main');
 });
+
+
+
 
 
 app.listen(port);
